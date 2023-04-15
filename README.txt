@@ -16,3 +16,5 @@ https://github.com/Farama-Foundation/Gymnasium - source for Frozen Lake
 https://pymdptoolbox.readthedocs.io/en/latest/api/mdptoolbox.html - source for Forest Management
 
 create folder "plots" with 3 subfolders: "forest" "frozen_6" "frozen_16"
+
+Some PI or QL runs start to catch and freeze up, restarting them usually works out

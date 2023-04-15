@@ -9,7 +9,6 @@ import mdptoolbox
 import mdptoolbox.example
 
 
-
 def colors_lake():
     return {
         b'S': 'green',
@@ -154,8 +153,9 @@ def plot_policy_map(title, policy, map_desc, color_map, direction_map):
     return (plt)
 
 
-def Frozen_Lake(size):
-    env = gym.make('FrozenLake-v1', desc=generate_random_map(size=size))
+def Frozen_Lake(lake_size):
+    environment = 'FrozenLake-v1'
+    env = gym.make(environment, desc=generate_random_map(size=lake_size))
     env = env.unwrapped
     desc = env.unwrapped.desc
 
@@ -167,7 +167,8 @@ def Frozen_Lake(size):
     policy_diff_list = []
     reward_list = []
 
-    print(f'Frozen Lake {size}: PI')
+
+    print(f'Frozen Lake {lake_size}: PI')
     for i in range(len(gammas)):
         gamma = gammas[i]
         print(gamma)
@@ -175,6 +176,7 @@ def Frozen_Lake(size):
         best_policy, k, policy_diff, score_list = policy_iteration(env, gamma=gamma)
         scores = evaluate_policy(env, best_policy, gamma=gamma)
         end = time.time()
+        gammas[i] = gamma
         list_scores[i] = np.mean(scores)
         iters[i] = k
         time_array[i] = end - st
@@ -187,7 +189,7 @@ def Frozen_Lake(size):
     plt.title(title)
     plt.ylabel('Execution Time (s)')
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     plt.plot(gammas, list_scores)
@@ -196,7 +198,7 @@ def Frozen_Lake(size):
     title = f'PI-Reward vs Gammas'
     plt.title(title)
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     plt.plot(gammas, iters)
@@ -205,7 +207,7 @@ def Frozen_Lake(size):
     title = f'PI-Convergence vs Gammas'
     plt.title(title)
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     for g in range(len(gammas)):
@@ -216,7 +218,7 @@ def Frozen_Lake(size):
     title = f'PI-Reward vs Iterations'
     plt.title(title)
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     for g in range(len(gammas)):
@@ -227,10 +229,11 @@ def Frozen_Lake(size):
     title = f'PI-Policy Difference vs Iterations'
     plt.title(title)
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
-    print(f'Frozen Lake {size}: VI')
+
+    print(f'Frozen Lake {lake_size}: VI')
     time_array = [0] * len(gammas)
     iters = [0] * len(gammas)
     list_scores = [0] * len(gammas)
@@ -244,8 +247,8 @@ def Frozen_Lake(size):
         best_value, k, value_diff, score_list = value_iteration(env, gamma=gamma)
         policy = extract_policy(env, best_value, gamma=gamma)
         policy_score = evaluate_policy(env, policy, gamma=gamma, n=100)
-        plot = plot_policy_map(f'plots/frozen_{size}/Policy_Map_Gamma:{gamma}',
-                               policy.reshape(size, size), desc, colors_lake(),
+        plot = plot_policy_map(f'plots/frozen_{lake_size}/Policy_Map_Gamma:{gamma}',
+                               policy.reshape(lake_size, lake_size), desc, colors_lake(),
                                directions_lake())
         end = time.time()
         iters[i] = k
@@ -261,7 +264,7 @@ def Frozen_Lake(size):
     plt.title(title)
     plt.ylabel('Execution Time (s)')
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     plt.plot(gammas, list_scores)
@@ -270,7 +273,7 @@ def Frozen_Lake(size):
     title = f'VI-Reward vs Gammas'
     plt.title(title)
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     plt.plot(gammas, iters)
@@ -279,7 +282,7 @@ def Frozen_Lake(size):
     title = f'VI-Convergence vs Gammas'
     plt.title(title)
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     plt.plot(gammas, best_vals)
@@ -289,7 +292,7 @@ def Frozen_Lake(size):
     title = f'VI-Best Value'
     plt.title(title)
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     for g in range(len(gammas)):
@@ -300,7 +303,7 @@ def Frozen_Lake(size):
     title = f'VI-Value Difference vs Iterations'
     plt.title(title)
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     for g in range(len(gammas)):
@@ -311,16 +314,17 @@ def Frozen_Lake(size):
     title = f'VI-Rewards vs Iterations'
     plt.title(title)
     plt.grid()
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
-    print(f'Frozen Lake {size}: QL')
+    print(f'Frozen Lake {lake_size}: QL')
     epsilon_list = [0.8, 0.85, 0.9, 0.95, 0.99]
 
     st = time.time()
     reward_array = []
     iter_array = []
     size_array = []
+    chunks_array = []
     averages_array = []
     time_array = []
     Q_array = []
@@ -331,10 +335,12 @@ def Frozen_Lake(size):
         optimal = [0] * env.observation_space.n
         alpha = 0.85
         gamma = 0.95
-        env = gym.make('FrozenLake-v1', desc=generate_random_map(size=size))
+        episodes = 10000
+        environment = 'FrozenLake-v1'
+        env = gym.make(environment, desc=generate_random_map(size=lake_size))
         env = env.unwrapped
         desc = env.unwrapped.desc
-        for episode in range(10000):
+        for episode in range(episodes):
             state = env.reset()[0]
             done = False
             t_reward = 0
@@ -370,44 +376,44 @@ def Frozen_Lake(size):
             for i in range(0, len(l), n):
                 yield l[i:i + n]
 
-        size = int(10000 / 50)
+        size = int(episodes / 50)
         chunks = list(chunk_list(rewards, size))
         averages = [sum(chunk) / len(chunk) for chunk in chunks]
         size_array.append(size)
+        chunks_array.append(chunks)
         averages_array.append(averages)
 
     for i in range(len(epsilon_list)):
         plt.plot(range(0, len(reward_array[i]), size_array[i]), averages_array[i], label=f'epsilon={epsilon_list[i]}')
 
-    plt.legend(loc='best')
+    plt.legend()
     plt.xlabel('Iterations')
     plt.grid()
     title = f'Q Learning-Constant Epsilon'
     plt.title(title)
     plt.ylabel('Average Reward')
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
     plt.plot(epsilon_list, time_array)
-    plt.legend(loc='best')
     plt.xlabel('Epsilon Values')
     plt.grid()
     title = f'Q Learning'
     plt.title(title)
     plt.ylabel('Execution Time (s)')
-    plt.savefig(f'plots/frozen_{size}/{title.replace(" ", "_")}.png')
+    plt.savefig(f'plots/frozen_{lake_size}/{title.replace(" ", "_")}.png')
     plt.clf()
 
 
-def Forest(size):
-    print(f'Forest Management {size}: PI')
+def Forest(forest_size):
+    print(f'Forest Management {forest_size}: PI')
     gammas = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99]
 
     exec_time = []
     reward = []
     iter_list = []
 
-    for states in size:
+    for states in forest_size:
         P, R = mdptoolbox.example.forest(S=states)
         mean_value = []
         policy = []
@@ -438,7 +444,7 @@ def Forest(size):
     plt.plot(gammas, exec_time[2], label='State - 500')
     plt.plot(gammas, exec_time[3], label='State - 1000')
     plt.xlabel('Gamma')
-    plt.title('PI-Gamma vs Execution Time')
+    plt.title('PI - Gamma vs Execution Time')
     plt.ylabel('Execution Time (s)')
     plt.grid()
     plt.legend()
@@ -451,7 +457,7 @@ def Forest(size):
     plt.plot(gammas, reward[3], label='State - 1000')
     plt.xlabel('Gamma')
     plt.ylabel('Average Rewards')
-    plt.title('PI-Gamma vs Reward')
+    plt.title('PI - Gamma vs Reward')
     plt.grid()
     plt.legend()
     plt.savefig("plots/forest/PI_AverageRewards.png")
@@ -463,18 +469,18 @@ def Forest(size):
     plt.plot(gammas, iter_list[3], label='State - 1000')
     plt.xlabel('Gamma')
     plt.ylabel('Iterations')
-    plt.title('PI-Gamma vs Convergence')
+    plt.title('PI - Gamma vs Convergence')
     plt.grid()
     plt.legend()
     plt.savefig("plots/forest/PI_Iterations.png")
     plt.clf()
 
-    print(f'Forest Management {size}: VI')
+    print(f'Forest Management {forest_size}: VI')
     exec_time = []
     reward = []
     iter_list = []
 
-    for states in size:
+    for states in forest_size:
         P, R = mdptoolbox.example.forest(S=states)
         mean_value = []
         policy = []
@@ -504,7 +510,7 @@ def Forest(size):
     plt.plot(gammas, exec_time[2], label='State - 500')
     plt.plot(gammas, exec_time[3], label='State - 1000')
     plt.xlabel('Gamma')
-    plt.title('VI-Gamma vs Execution Time')
+    plt.title('VI - Gamma vs Execution Time')
     plt.ylabel('Execution Time (s)')
     plt.grid()
     plt.legend()
@@ -517,7 +523,7 @@ def Forest(size):
     plt.plot(gammas, reward[3], label='State - 1000')
     plt.xlabel('Gamma')
     plt.ylabel('Average Rewards')
-    plt.title('VI-Gamma vs Reward')
+    plt.title('VI - Gamma vs Reward')
     plt.grid()
     plt.legend()
     plt.savefig("plots/forest/VI_AverageRewards.png")
@@ -529,19 +535,19 @@ def Forest(size):
     plt.plot(gammas, iter_list[3], label='State - 1000')
     plt.xlabel('Gamma')
     plt.ylabel('Iterations')
-    plt.title('VI-Gamma vs Convergence')
+    plt.title('VI - Gamma vs Convergence')
     plt.grid()
     plt.legend()
     plt.savefig("plots/forest/VI_Iterations.png")
     plt.clf()
 
 
-    print(f'Forest Management {size}: QL')
+    print(f'Forest Management {forest_size}: QL')
     exec_time = []
     reward = []
     iter_list = []
 
-    for states in size:
+    for states in forest_size:
         P, R = mdptoolbox.example.forest(S=states)
         mean_value = []
         policy = []
@@ -570,7 +576,7 @@ def Forest(size):
     plt.plot(gammas, exec_time[2], label='State - 500')
     plt.plot(gammas, exec_time[3], label='State - 1000')
     plt.xlabel('Gamma')
-    plt.title('Q-Gamma vs Execution Time')
+    plt.title('Q - Gamma vs Execution Time')
     plt.ylabel('Execution Time (s)')
     plt.grid()
     plt.legend()
@@ -583,13 +589,14 @@ def Forest(size):
     plt.plot(gammas, reward[3], label='State - 1000')
     plt.xlabel('Gamma')
     plt.ylabel('Average Rewards')
-    plt.title('Q-Gamma vs Reward')
+    plt.title('Q - Gamma vs Reward')
     plt.grid()
     plt.legend()
     plt.savefig("plots/forest/Q_AverageRewards.png")
     plt.clf()
-    return
 
+
+    return
 
 Frozen_Lake(6)
 Frozen_Lake(16)
